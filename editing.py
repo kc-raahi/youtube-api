@@ -10,6 +10,8 @@ from moviepy.video.fx.fadein import fadein
 from moviepy.video.fx.fadeout import fadeout
 from moviepy.video.io.VideoFileClip import VideoFileClip
 
+from constants import CLIP_LENGTH
+
 
 def get_title_and_channel(vid, vid_dicts, import_path):
     vid_id = vid.removesuffix('.mp4')
@@ -62,13 +64,13 @@ def edit_videos(my_date, vids_and_ids, vid_dicts):
         # vid_info = json.load(f"data/{yyyymmdd}/{title_string}.json")
         desc_txt += str(i) + ". https://www.youtube.com/watch?v=" + vid_id + "\n"
         title_text = TextClip(str(i) + ". " + title_string, fontsize=30, color="white", font="Impact")
-        title_text = title_text.set_duration(30).set_position(("center", "bottom"))
+        title_text = title_text.set_duration(CLIP_LENGTH).set_position(("center", "bottom"))
         channel_text = TextClip("Channel: " + chname, fontsize=30, color="white", font="Impact")
-        channel_text = channel_text.set_duration(30).set_position(("left", "top"))
+        channel_text = channel_text.set_duration(CLIP_LENGTH).set_position(("left", "top"))
         view_text = TextClip(views + " views", fontsize=30, color="white", font="Impact")
-        view_text = view_text.set_duration(30).set_position(("right", "top"))
-        r = random.randint(0, math.floor(v.duration) - 30)
-        v = v.subclip(r, r + 30)
+        view_text = view_text.set_duration(CLIP_LENGTH).set_position(("right", "top"))
+        r = random.randint(0, math.floor(v.duration) - CLIP_LENGTH)
+        v = v.subclip(r, r + CLIP_LENGTH)
         v = v.fx(fadein, 1).fx(fadeout, 1)
         v = v.fx(fadein, 1).fx(fadeout, 1)
         v = CompositeVideoClip([v, title_text, channel_text, view_text])
