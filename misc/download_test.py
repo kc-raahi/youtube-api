@@ -10,12 +10,13 @@ sys.path.append(parent_dir)
 from pytube import YouTube
 
 
-def download_video(link, path=None, filename=None):
+def download_video(link, vid_dicts, path=None, filename=None):
     youtubeObject = YouTube(link)
+    id = link.removeprefix('https://www.youtube.com/watch?v=')
     pprint.pprint(youtubeObject)
     youtubeObject = youtubeObject.streams.get_highest_resolution()
     try:
-        youtubeObject.download(output_path=path, filename=filename)
+        youtubeObject.download(output_path=path, filename=id + '.mp4')
     except:
         print("An error has occurred")
     print("Download is completed successfully")

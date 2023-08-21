@@ -1,4 +1,3 @@
-import json
 import math
 import os
 import random
@@ -10,18 +9,26 @@ from moviepy.video.compositing.concatenate import concatenate_videoclips
 from moviepy.video.fx.fadein import fadein
 from moviepy.video.fx.fadeout import fadeout
 from moviepy.video.io.VideoFileClip import VideoFileClip
-from unidecode import unidecode
-
-from constants import ILLEGAL_CHARACTERS
-from utils import fix_title
 
 
-def get_title_string(vid):
-    s = os.path.basename(vid)
-    s = s.removesuffix(".mp4")
-    return s
+def get_title_and_channel(vid, vid_dicts, import_path):
+    vid_id = vid.removesuffix('.mp4')
+    vid_id = vid_id.removeprefix(import_path)
+    vid_id = vid_id.replace('\\', '')
+    for v in vid_dicts:
+        if v['id'] == vid_id:
+            return os.path.basename(v['snippet']['title']), os.path.basename(v['snippet']['channelTitle'])
+    return None
 
-def edit_videos(my_date, vids_and_ids):
+
+def get_views(vid_dicts, vid_id):
+    for vid in vid_dicts:
+        if vid['id'] == vid_id:
+            return vid['statistics']['viewCount']
+    return None
+
+
+def edit_videos(my_date, vids_and_ids, vid_dicts):
     yyyymmdd = my_date.strftime("%Y%m%d")
     nicedate = my_date.strftime("%B %d, %Y")
     import_path = "videos/raw/" + yyyymmdd
@@ -33,31 +40,38 @@ def edit_videos(my_date, vids_and_ids):
     intro_text = TextClip("Popular on YouTube Highlights: " + nicedate, fontsize=50, color="white", font="Impact")
     intro_text = intro_text.set_position(("center", "center"))
     intro_text = intro_text.set_duration(13)
+
+    intro_subtext = TextClip("Daily selection of clips taken from \"Popular on YouTube\"" + nicedate,
+                          fontsize=40, color="white", font="Impact")
+    intro_subtext = intro_subtext.set_position(("center", "bottom")).set_duration(13)
     outro_text = TextClip("Thanks for watching!", fontsize=50, color="white", font="Impact")
     outro_text = outro_text.set_position(("center", "center"))
     outro_text = outro_text.set_duration(12)
 
-    intro_final = CompositeVideoClip([intro, intro_text]).fx(fadein, 1).fx(fadeout, 1)
+    intro_final = CompositeVideoClip([intro, intro_text, intro_subtext]).fx(fadein, 1).fx(fadeout, 1)
     outro_final = CompositeVideoClip([outro, outro_text]).fx(fadein, 1).fx(fadeout, 1)
 
     vids.append(intro_final)
     i = 1
     for vid in glob(import_path + "/*.mp4"):
         v = VideoFileClip(vid)
-        title_string = get_title_string(vid)
-        title_string = fix_title(title_string, ILLEGAL_CHARACTERS)
-        # Get from file: id
-        # 'Hayami Hana'
-        vid_id = vids_and_ids[title_string]
+        title_string, chname = get_title_and_channel(vid, vid_dicts, import_path)
+        # title_string = fix_title(title_string, ILLEGAL_CHARACTERS)
+        vid_id = vid.removesuffix('.mp4').removeprefix(import_path).replace('\\', '')
+        views = get_views(vid_dicts, vid_id)
         # vid_info = json.load(f"data/{yyyymmdd}/{title_string}.json")
         desc_txt += str(i) + ". https://www.youtube.com/watch?v=" + vid_id + "\n"
         title_text = TextClip(str(i) + ". " + title_string, fontsize=30, color="white", font="Impact")
         title_text = title_text.set_duration(30).set_position(("center", "bottom"))
+        channel_text = TextClip("Channel: " + chname, fontsize=30, color="white", font="Impact")
+        channel_text = channel_text.set_duration(30).set_position(("left", "top"))
+        view_text = TextClip(views + " views", fontsize=30, color="white", font="Impact")
+        view_text = view_text.set_duration(30).set_position(("right", "top"))
         r = random.randint(0, math.floor(v.duration) - 30)
         v = v.subclip(r, r + 30)
         v = v.fx(fadein, 1).fx(fadeout, 1)
         v = v.fx(fadein, 1).fx(fadeout, 1)
-        v = CompositeVideoClip([v, title_text])
+        v = CompositeVideoClip([v, title_text, channel_text, view_text])
         i += 1
         vids.append(v)
 

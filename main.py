@@ -1,4 +1,3 @@
-import pprint
 import random
 from datetime import date
 import os.path
@@ -36,7 +35,7 @@ def get_popular_urls():
         urls.append(url)
         by_name[title] = vid['id']
         by_url[url] = fix_title(title, ILLEGAL_CHARACTERS)
-    return urls, by_name, by_url
+    return urls, by_name, by_url, popular_video_data
 
 
 if __name__ == "__main__":
@@ -47,7 +46,7 @@ if __name__ == "__main__":
 
     url_storage = URLStorage(STORAGE_FILE)
     # Get URLs for "Popular on YouTube"
-    popular_urls, vids_and_ids, links_and_titles = get_popular_urls()
+    popular_urls, vids_and_ids, links_and_titles, vid_dict_list = get_popular_urls()
     # pprint.pprint(vids_and_ids)
 
     # existing_urls = url_storage.get_existing_urls()
@@ -58,8 +57,8 @@ if __name__ == "__main__":
     # popular_urls, existing_urls = url_storage.add_to_urls(popular_urls, existing_urls)
 
     # Download
-    download_videos(popular_urls, url_storage, td_str, links_and_titles)
+    download_videos(popular_urls, url_storage, td_str, links_and_titles, vid_dict_list)
 
-    daily_vid_path = edit_videos(td, vids_and_ids)
+    daily_vid_path = edit_videos(td, vids_and_ids, vid_dict_list)
 
     url_storage.close()

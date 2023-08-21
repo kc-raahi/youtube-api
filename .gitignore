@@ -2,4 +2,8 @@ key.txt
 client_secrets.json
 client_secret_731556016960-5oh173too5dnj2m63vkqo1uf6vktjl21.apps.googleusercontent.com.json
 venv/
-videos/
+videos/raw/
+videos/edited/
+data/
+**/__pycache__/
+misc/upload_test.py-oauth2.json
