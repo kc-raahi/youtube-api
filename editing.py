@@ -16,7 +16,7 @@ from constants import CLIP_LENGTH
 def get_title_and_channel(vid, vid_dicts, import_path):
     vid_id = vid.removesuffix('.mp4')
     vid_id = vid_id.removeprefix(import_path)
-    vid_id = vid_id.replace('\\', '')
+    vid_id = vid_id.replace('\\', '').replace('/', '')
     for v in vid_dicts:
         if v['id'] == vid_id:
             return os.path.basename(v['snippet']['title']), os.path.basename(v['snippet']['channelTitle'])
