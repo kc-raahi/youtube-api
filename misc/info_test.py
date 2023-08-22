@@ -1,6 +1,9 @@
+import json
 import pprint
 import sys
 import os
+import urllib
+
 # Get the path of the directory containing p1.py
 current_dir = os.path.dirname(os.path.abspath(__file__))
 # Get the path of the directory containing p2.py
@@ -38,17 +41,7 @@ def get_popular_videos(youtube):
 
 
 if __name__ == "__main__":
-    popular_video_data = get_popular_videos(youtube.youtube)
-    # pprint.pprint(popular_video_data)
-    data_str = ""
-    # for vid in popular_video_data:
-    #     data_str += "https://www.youtube.com/watch?v=" + vid['id'] + "\n"
-    #
-    # data_str = str(data_str)
-    # print(data_str)
-
-    # Get Content Ratings
-    for vid in popular_video_data:
-        print(vid['contentDetails']['contentRating'])
+    popular_videos = get_popular_videos(youtube.youtube)
+    pprint.pprint(my_channel_videos)
 
 
