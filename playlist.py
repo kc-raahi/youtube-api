@@ -1,6 +1,6 @@
 from googleapiclient.discovery import build
 from oauth2client.client import flow_from_clientsecrets
-from oauth2client.tools import run_flow
+from oauth2client.tools import run_flow, argparser
 import googleapiclient.errors
 
 from oauth2client.file import Storage
@@ -41,5 +41,10 @@ def add_to_playlist(playlist_id, video_id):
     except googleapiclient.errors.HttpError as e:
         print(f"An error occurred: {e}")
 
+
 if __name__ == "__main__":
-    add_to_playlist("PLj-RvYg7WBWcJH-IFEMKp9is9S3Mr24eG", "17ct960jgHw")
+    argparser.add_argument("--vidId", required=True, help="ID of the video to add")
+    argparser.add_argument("--playlistId", required=True, help="ID of the playlist")
+
+    args = argparser.parse_args()
+    add_to_playlist(args.playlistId, args.vidId)
