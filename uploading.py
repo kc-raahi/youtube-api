@@ -131,7 +131,7 @@ def resumable_upload(insert_request):
                     print("Video id '%s' was successfully uploaded." % response['id'])
                     td = date.today()
                     td_str = td.strftime("%Y%m%d")
-                    with open(f"data/{td_str}_id.txt") as f:
+                    with open(f"data/{td_str}_id.txt", 'w') as f:
                         f.write(response['id'])
                 else:
                     exit("The upload failed with an unexpected response: %s" % response)
