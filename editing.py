@@ -43,7 +43,7 @@ def edit_videos(my_date, vids_and_ids, vid_dicts):
     intro_text = intro_text.set_position(("center", "center"))
     intro_text = intro_text.set_duration(13)
 
-    intro_subtext = TextClip("Daily selection of clips taken from \"Popular on YouTube\"" + nicedate,
+    intro_subtext = TextClip("Daily selection of clips taken from \"Popular on YouTube\"",
                           fontsize=40, color="white", font="Impact")
     intro_subtext = intro_subtext.set_position(("center", "bottom")).set_duration(13)
     outro_text = TextClip("Thanks for watching!", fontsize=50, color="white", font="Impact")
@@ -64,7 +64,7 @@ def edit_videos(my_date, vids_and_ids, vid_dicts):
         views = get_views(vid_dicts, vid_id)
         # vid_info = json.load(f"data/{yyyymmdd}/{title_string}.json")
         desc_txt += str(i) + ". https://www.youtube.com/watch?v=" + vid_id + "\n"
-        title_text = TextClip(str(i) + ". " + title_string, fontsize=30, color="white", font="Impact")
+        title_text = TextClip(str(i) + ". " + title_string, fontsize=20, color="white", font="Impact")
         title_text = title_text.set_duration(vlen).set_position(("center", "bottom"))
         channel_text = TextClip("Channel: " + chname, fontsize=30, color="white", font="Impact")
         channel_text = channel_text.set_duration(vlen).set_position(("left", "top"))
@@ -83,7 +83,7 @@ def edit_videos(my_date, vids_and_ids, vid_dicts):
     with open(f"data/{yyyymmdd}_highlights.txt", 'w') as f:
         f.write(desc_txt)
 
-    final_vid = concatenate_videoclips(vids)
+    final_vid = concatenate_videoclips(vids, method="compose")
     final_path = "videos/edited/" + yyyymmdd + "_highlights.mp4"
     final_vid.write_videofile(final_path)
     for v in vids:
