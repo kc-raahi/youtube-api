@@ -71,7 +71,7 @@ def edit_videos(my_date, vids_and_ids, vid_dicts):
         view_text = TextClip(views + " views", fontsize=30, color="white", font="Impact")
         view_text = view_text.set_duration(vlen).set_position(("right", "top"))
         r = 0 if vlen < CLIP_LENGTH else random.randint(0, math.floor(v.duration) - vlen)
-        print("subclip " + str(r) + " to " + str(r + vlen) + ", len " + vlen)
+        print("subclip " + str(r) + " to " + str(r + vlen) + ", len " + str(vlen))
         v = v.subclip(r, r + vlen)
         v = v.fx(fadein, 1).fx(fadeout, 1)
         v = v.fx(fadein, 1).fx(fadeout, 1)
